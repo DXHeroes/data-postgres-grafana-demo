@@ -7,9 +7,9 @@ import * as _ from "lodash";
 import { User } from "./entity/User";
 
 createConnection().then(async connection => {
-    await connection.manager.query("TRUNCATE \"component\" CASCADE")
-    await connection.manager.query("TRUNCATE \"score\" CASCADE")
-    await connection.manager.query("TRUNCATE \"user\" CASCADE")
+    await connection.manager.query("TRUNCATE \"components\" CASCADE")
+    await connection.manager.query("TRUNCATE \"scores\" CASCADE")
+    await connection.manager.query("TRUNCATE \"users\" CASCADE")
 
     const totalPracticesCount = 50
 
@@ -28,7 +28,7 @@ createConnection().then(async connection => {
             }
 
             let score = new Score();
-            score.recordedAt = moment().subtract(indexS, "h").toISOString();
+            score.recordedAt = moment().subtract(indexS, "h").toDate();
             score.practicingPractices = practicing;
             score.notPracticingPractices = notPracticing;
             score.skippedPractices = skipped;

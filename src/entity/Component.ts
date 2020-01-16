@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { Score } from "./Score";
 
-@Entity()
+@Entity({ name: "components" })
 export class Component {
 
   @PrimaryGeneratedColumn()
@@ -15,4 +15,16 @@ export class Component {
 
   @OneToMany(type => Score, score => score.component, { cascade: true, onDelete: 'CASCADE' }) // note: we will create author property in the Photo class below
   score: Score[];
+
+  /**
+     * DB insert time.
+     */
+  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+  createdAt: Date;
+
+  /**
+   * DB last update time.
+   */
+  @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  updatedAt: Date;
 }

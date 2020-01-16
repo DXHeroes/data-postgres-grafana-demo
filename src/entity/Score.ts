@@ -1,14 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { Component } from "./Component";
 
-@Entity()
+@Entity({ name: "scores" })
 export class Score {
 
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ nullable: false })
-  recordedAt: string;
+  recordedAt: Date;
 
   @ManyToOne(type => Component, component => component.score, { nullable: false, onDelete: 'CASCADE' })
   component: Component;
@@ -28,4 +28,15 @@ export class Score {
   @Column({ nullable: false, type: "decimal" })
   percentageResult: number;
 
+  /**
+     * DB insert time.
+     */
+  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+  createdAt: Date;
+
+  /**
+   * DB last update time.
+   */
+  @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  updatedAt: Date;
 }

@@ -1,12 +1,23 @@
-version: '3'
+version: '3.4'
 services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+    volumes:
+      - ./data/postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
   grafana:
     image: grafana/grafana:latest
+    # network_mode: host
     container_name: grafana
     ports:
       - "3000:3000"
     user: "0"
     volumes:
-      # Data persistency
-      # sudo mkdir -p /srv/docker/grafana/data; chown 472:472 /srv/docker/grafana/data
-      - /srv/docker/grafana/data:/var/lib/grafana
+      - ./data/grafana-storage:/var/lib/grafana
+    links:
+      - postgres

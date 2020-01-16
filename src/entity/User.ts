@@ -1,6 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 
-@Entity()
+@Entity({ name: "users" })
 export class User {
 
     @PrimaryGeneratedColumn()
@@ -15,4 +15,15 @@ export class User {
     @Column()
     age: number;
 
+    /**
+     * DB insert time.
+     */
+    @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+    createdAt: Date;
+
+    /**
+     * DB last update time.
+     */
+    @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+    updatedAt: Date;
 }
