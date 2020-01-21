@@ -4,7 +4,7 @@ Demo integration of Grafana and Postgres database
 ## Quickstart
 1st terminal
 ```
-docker compose up
+docker-compose up
 ```
 ...wait for start.
 
