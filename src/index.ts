@@ -5,18 +5,30 @@ import { Score } from "./entity/Score";
 import * as moment from "moment";
 import * as _ from "lodash";
 import { User } from "./entity/User";
+import { PullRequest } from "./entity/PullRequest";
 
 createConnection().then(async connection => {
     await connection.manager.query("TRUNCATE \"components\" CASCADE")
     await connection.manager.query("TRUNCATE \"scores\" CASCADE")
     await connection.manager.query("TRUNCATE \"users\" CASCADE")
+    await connection.manager.query("TRUNCATE \"pullrequests\" CASCADE")
 
-    const totalPracticesCount = 50
+    const totalPracticesCount = 50;
+    let users = []
+    for (let i = 1; i < 10; i++) {
+        let user = new User();
+        user.id = i.toString()
+        user.login = "DXHeroes";
+        user.url = "https://github.com/DXHeroes";
+        users.push(user);
+        await connection.manager.save(user);
+    }
 
-    // create a few photos
+    let pullRequests = [];
+    // create 100 components
     for (let indexC = 0; indexC < 100; indexC++) {
-        // create a few photos
-        let scores = []
+        // create a few scores
+        let scores = [];
         for (let indexS = 0; indexS < 2000; indexS++) {
             const practicing = _.random(totalPracticesCount);
             const notPracticing = _.random(totalPracticesCount - practicing)
@@ -38,15 +50,28 @@ createConnection().then(async connection => {
         }
         console.log("scores.length: ", scores.length);
 
-        // create a few albums
+        // create a component
         let component = new Component();
         component.name = "DXHeroes/dx-scanner";
         component.path = "https://github.com/DXHeroes/dx-scanner";
         component.score = scores;
         await connection.manager.save(component);
 
-        // now our photo is saved and components are attached to it
-        // now lets load them:
+        //create pullRequest
+        let pullRequest = new PullRequest();
+        pullRequest.id = indexC + 1;
+        pullRequest.user = _.sample(users)
+        pullRequest.path = `https://github.com/DXHeroes/dx-scanner/pull/${pullRequest.id}`;
+        pullRequest.state = _.sample(["open", "merged"]);
+        pullRequest.createdAt = moment(pullRequest.createdAt).subtract(indexC, 'm').toDate();
+        pullRequest.updatedAt = moment(pullRequest.updatedAt).subtract(indexC + 1, 'm').toDate();
+        if (pullRequest.state === "merged") {
+            pullRequest.mergedAt = moment().subtract(indexC, "h").toDate();
+        }
+        pullRequests.push(pullRequest)
+        await connection.manager.save(pullRequest)
+        
+        // load score:
         const loadedScoreCount = await connection
             .getRepository(Score)
             .count();
@@ -54,10 +79,17 @@ createConnection().then(async connection => {
         console.log("loadedScoreCount: ", loadedScoreCount);
     }
 
+    // load component
     const loadedComponentCount = await connection
         .getRepository(Component)
         .count();
 
+    // load pullrequests
+    const loadedPulRequests = await connection
+        .getRepository(PullRequest)
+        .count();
+
     console.log("loadedComponentCount: ", loadedComponentCount);
+    console.log("loadedPulRequests: ", loadedPulRequests);
 
 }).catch(error => console.log(error));
