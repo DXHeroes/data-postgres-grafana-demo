@@ -4,17 +4,16 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 export class User {
 
     @PrimaryGeneratedColumn()
-    id: number;
+    uuid: number;
 
     @Column()
-    firstName: string;
+    id: string;
 
     @Column()
-    lastName: string;
+    login: string;
 
     @Column()
-    age: number;
-
+    url: string;
     /**
      * DB insert time.
      */

@@ -7,6 +7,9 @@ export class Component {
   @PrimaryGeneratedColumn()
   id: number;
 
+  // @Column()
+  // id: string;
+
   @Column()
   name: string;
 
