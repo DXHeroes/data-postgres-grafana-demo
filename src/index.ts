@@ -6,6 +6,7 @@ import * as moment from "moment";
 import * as _ from "lodash";
 import { User } from "./entity/User";
 import { PullRequest } from "./entity/PullRequest";
+import { Issue } from "./entity/Issue";
 
 createConnection().then(async connection => {
     await connection.manager.query("TRUNCATE \"components\" CASCADE")
@@ -25,6 +26,7 @@ createConnection().then(async connection => {
     }
 
     let pullRequests = [];
+    let issues = [];
     // create 100 components
     for (let indexC = 0; indexC < 100; indexC++) {
         // create a few scores
@@ -71,6 +73,20 @@ createConnection().then(async connection => {
         pullRequests.push(pullRequest)
         await connection.manager.save(pullRequest)
         
+        //create issues
+        let issue = new Issue();
+        issue.id = indexC + 1;
+        issue.user = _.sample(users)
+        issue.path = `https://github.com/DXHeroes/dx-scanner/issues/${issue.id}`;
+        issue.state = _.sample(["open", "closed"]);
+        issue.createdAt = moment(issue.createdAt).subtract(indexC, 'm').toDate();
+        issue.updatedAt = moment(issue.updatedAt).subtract(indexC + 1, 'm').toDate();
+        if (issue.state === "closed") {
+            issue.mergedAt = moment().subtract(indexC, "h").toDate();
+        }
+        issues.push(issue)
+        await connection.manager.save(issue)
+
         // load score:
         const loadedScoreCount = await connection
             .getRepository(Score)
