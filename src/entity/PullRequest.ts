@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn, OneToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, JoinColumn, ManyToOne } from "typeorm";
 import { User } from "./User";
 
 @Entity({ name: "pullrequests" })
@@ -10,7 +10,7 @@ export class PullRequest {
   @Column()
   id: number;
 
-  @OneToOne(type => User, user => user)
+  @ManyToOne(type => User, user => user.uuid)
   user: User;
 
   @Column()
