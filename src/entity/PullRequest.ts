@@ -15,7 +15,7 @@ export class PullRequest {
   user: User;
 
   @ManyToOne(type => Component, component => component.id)
-  component: string;
+  component: number;
 
   @Column()
   path: string;

@@ -8,6 +8,7 @@ import { User } from "./entity/User";
 import { PullRequest } from "./entity/PullRequest";
 import { Issue } from "./entity/Issue";
 import { SecurityIssue, Impact } from "./entity/SecurityIssue";
+import { CodeCoverage } from "./entity/CodeCoverage";
 
 createConnection().then(async connection => {
     await connection.manager.query("TRUNCATE \"components\" CASCADE")
@@ -33,8 +34,8 @@ createConnection().then(async connection => {
     let securityIssues = [];
     // create 100 components
     for (let indexC = 0; indexC < 100; indexC++) {
-        // create a few scores
         let scores = [];
+        let codeCoverages = [];
         for (let indexS = 0; indexS < 2000; indexS++) {
             const practicing = _.random(totalPracticesCount);
             const notPracticing = _.random(totalPracticesCount - practicing);
@@ -45,6 +46,7 @@ createConnection().then(async connection => {
                 throw new Error("total count is not equal")
             }
 
+            // create scores
             let score = new Score();
             score.recordedAt = moment().subtract(indexS, "h").toDate();
             score.practicingPractices = practicing;
@@ -52,7 +54,16 @@ createConnection().then(async connection => {
             score.skippedPractices = skipped;
             score.failedPractices = failed;
             score.percentageResult = ((practicing / (practicing + notPracticing)) * 100);
+
             scores.push(score);
+
+            // create codeCoverage
+            let codeCoverage = new CodeCoverage();
+            codeCoverage.id = indexS + 1;
+            codeCoverage.percentageResult = _.random(0, 100);
+            codeCoverage.recordedAt = moment().subtract(indexS, "h").toDate();
+
+            codeCoverages.push(codeCoverage);
         }
         console.log("scores.length: ", scores.length);
 
@@ -61,6 +72,7 @@ createConnection().then(async connection => {
         component.name = "DXHeroes/dx-scanner";
         component.path = "https://github.com/DXHeroes/dx-scanner";
         component.score = scores;
+        component.codeCoverage = codeCoverages;
         component.language = _.sample([Language.CSharp, Language.JavaScript, Language.Python, Language.TypeScript])
         component.platform = _.sample([Platform.BackEnd, Platform.FrontEnd]);
 
@@ -70,7 +82,8 @@ createConnection().then(async connection => {
         for (let k = 0; k < 10; k++) {
             //create pullRequest
             let pullRequest = new PullRequest();
-            pullRequest.id = indexC + 1;
+            pullRequest.id = k + 1;
+            pullRequest.component = component.id;
             pullRequest.user = _.sample(users)
             pullRequest.path = `https://github.com/DXHeroes/dx-scanner/pull/${pullRequest.id}`;
             pullRequest.state = _.sample(["open", "merged"]);
@@ -84,7 +97,7 @@ createConnection().then(async connection => {
 
             //create issues
             let issue = new Issue();
-            issue.id = indexC + 1;
+            issue.id = k + 1;
             issue.user = _.sample(users)
             issue.path = `https://github.com/DXHeroes/dx-scanner/issues/${issue.id}`;
             issue.state = _.sample(["open", "closed"]);
@@ -95,21 +108,20 @@ createConnection().then(async connection => {
             }
             issues.push(issue)
             await connection.manager.save(issue)
-
-            //create sceurity issues
-            let securityIssue = new SecurityIssue();
-            securityIssue.id = indexC + 1;
-            securityIssue.package = 'bitbucket';
-            securityIssue.impact = _.sample(Impact.low, Impact.medium, Impact.high);
-            securityIssue.path = 'https://github.com/DXHeroes/dx-scanner';
-            securityIssue.moreInfo = `https://nodesecurity.io/advisories/${issue.id}`;
-            securityIssue.patchedIn = _.sample(null, '> 4.3.0 < 5.0.0 YY >= 5.0.3')
-            securityIssue.createdAt = moment(issue.createdAt).subtract(indexC, 'm').toDate();
-
-            securityIssues.push(securityIssue);
-            await connection.manager.save(securityIssue)
         }
 
+        //create security issues
+        let securityIssue = new SecurityIssue();
+        securityIssue.id = indexC + 1;
+        securityIssue.package = 'bitbucket';
+        securityIssue.impact = _.sample([Impact.low, Impact.medium, Impact.high]);
+        securityIssue.path = 'https://github.com/DXHeroes/dx-scanner';
+        securityIssue.moreInfo = `https://nodesecurity.io/advisories/${securityIssue.id}`;
+        securityIssue.patchedIn = _.sample([null, '> 4.3.0 < 5.0.0 YY >= 5.0.3'])
+        securityIssue.createdAt = moment(securityIssue.createdAt).subtract(indexC, 'm').toDate();
+
+        securityIssues.push(securityIssue);
+        await connection.manager.save(securityIssue);
 
         // // load score:
         // const loadedScoreCount = await connection
