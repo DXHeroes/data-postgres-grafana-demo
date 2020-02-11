@@ -3,6 +3,7 @@ import { createConnection } from "typeorm";
 import { Component, Language, Platform } from "./entity/Component";
 import { Score } from "./entity/Score";
 import * as moment from "moment";
+import * as faker from "faker";
 import * as _ from "lodash";
 import { User } from "./entity/User";
 import { PullRequest } from "./entity/PullRequest";
@@ -14,7 +15,10 @@ createConnection().then(async connection => {
     await connection.manager.query("TRUNCATE \"components\" CASCADE")
     await connection.manager.query("TRUNCATE \"scores\" CASCADE")
     await connection.manager.query("TRUNCATE \"users\" CASCADE")
+    await connection.manager.query("TRUNCATE \"issues\" CASCADE")
+    await connection.manager.query("TRUNCATE \"securityIssues\" CASCADE")
     await connection.manager.query("TRUNCATE \"pullrequests\" CASCADE")
+    await connection.manager.query("TRUNCATE \"codeCoverage\" CASCADE")
 
     const totalPracticesCount = 50;
     let users = [];
@@ -23,8 +27,8 @@ createConnection().then(async connection => {
         // create users
         let user = new User();
         user.id = i.toString()
-        user.login = "DXHeroes";
-        user.url = "https://github.com/DXHeroes";
+        user.login = faker.internet.userName()
+        user.url = `https://github.com/${user.login}`;
         users.push(user);
         await connection.manager.save(user);
     }
@@ -65,7 +69,6 @@ createConnection().then(async connection => {
 
             codeCoverages.push(codeCoverage);
         }
-        console.log("scores.length: ", scores.length);
 
         // create a component
         let component = new Component();
