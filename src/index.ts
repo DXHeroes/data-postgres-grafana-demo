@@ -14,7 +14,11 @@ createConnection().then(async connection => {
     await connection.manager.query("TRUNCATE \"components\" CASCADE")
     await connection.manager.query("TRUNCATE \"scores\" CASCADE")
     await connection.manager.query("TRUNCATE \"users\" CASCADE")
+    await connection.manager.query("TRUNCATE \"issues\" CASCADE")
+    await connection.manager.query("TRUNCATE \"securityIssues\" CASCADE")
     await connection.manager.query("TRUNCATE \"pullrequests\" CASCADE")
+    await connection.manager.query("TRUNCATE \"codeCoverage\" CASCADE")
+
 
     const totalPracticesCount = 50;
     let users = [];
