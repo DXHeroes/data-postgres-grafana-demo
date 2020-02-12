@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
+import { Component } from "./Component";
 
 @Entity({ name: "users" })
 export class User {
@@ -20,6 +21,9 @@ export class User {
     @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
     createdAt: Date;
 
+    @ManyToOne(type => Component, component => component.securityIssues, { nullable: false})
+    component: Component;
+  
     /**
      * DB last update time.
      */

@@ -4,6 +4,7 @@ import { PullRequest } from "./PullRequest";
 import { Issue } from "./Issue";
 import { SecurityIssue } from "./SecurityIssue";
 import { CodeCoverage } from "./CodeCoverage";
+import { User } from "./User";
 
 @Entity({ name: "components" })
 export class Component {
@@ -22,6 +23,9 @@ export class Component {
 
   @Column({ nullable: true})
   platform: Platform;
+
+  @OneToMany(type => User, user => user.component, { cascade: true, onDelete: 'CASCADE' })
+  users: User[];
 
   @OneToMany(type => Score, score => score.component, { cascade: true, onDelete: 'CASCADE' })
   scores: Score[];

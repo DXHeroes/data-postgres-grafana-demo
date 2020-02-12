@@ -21,20 +21,10 @@ createConnection().then(async connection => {
     await connection.manager.query("TRUNCATE \"codeCoverages\" CASCADE")
 
     const totalPracticesCount = 50;
-    let users = [];
-
-    for (let i = 1; i < 10; i++) {
-        // create users
-        let user = new User();
-        user.externalId = i
-        user.login = faker.internet.userName()
-        user.url = `https://github.com/${user.login}`;
-        users.push(user);
-        await connection.manager.save(user);
-    }
 
     // create 100 components
     for (let indexC = 0; indexC < 100; indexC++) {
+        const users: User[] = [];
         const scores: Score[] = []
         const codeCoverages: CodeCoverage[] = []
         const pullRequests: PullRequest[] = []
@@ -52,6 +42,17 @@ createConnection().then(async connection => {
         
         await connection.manager.save(component);
 
+        for (let i = 1; i < 10; i++) {
+            // create users
+            let user = new User();
+            user.externalId = i
+            user.component = component
+            user.login = faker.internet.userName()
+            user.url = `https://github.com/${user.login}`;
+            users.push(user);
+        }
+        await connection.manager.insert(User, users);
+        
         for (let indexS = 0; indexS < 2000; indexS++) {
             const practicing = _.random(totalPracticesCount);
             const notPracticing = _.random(totalPracticesCount - practicing);
