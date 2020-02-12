@@ -35,6 +35,12 @@ createConnection().then(async connection => {
 
     // create 100 components
     for (let indexC = 0; indexC < 100; indexC++) {
+        const scores: Score[] = []
+        const codeCoverages: CodeCoverage[] = []
+        const pullRequests: PullRequest[] = []
+        const issues: Issue[] = []
+        const securityIssues: SecurityIssue[] = []
+
         // create a component
         let component = new Component();
         const cOwner = faker.internet.domainName().split(".")[0]
@@ -65,6 +71,7 @@ createConnection().then(async connection => {
             score.skippedPractices = skipped;
             score.failedPractices = failed;
             score.percentageResult = ((practicing / (practicing + notPracticing)) * 100);
+            scores.push(score)
 
             // create codeCoverage
             let codeCoverage = new CodeCoverage();
@@ -72,7 +79,11 @@ createConnection().then(async connection => {
             codeCoverage.externalId = indexS + 1;
             codeCoverage.percentageResult = _.random(0, 100);
             codeCoverage.recordedAt = moment().subtract(indexS, "h").toDate();
+            codeCoverages.push(codeCoverage)
         }
+        await connection.manager.insert(Score, scores);
+        await connection.manager.insert(CodeCoverage, codeCoverages);
+
 
         //create 10 for every component
         for (let k = 0; k < 10; k++) {
@@ -88,8 +99,7 @@ createConnection().then(async connection => {
             if (pullRequest.state === "merged") {
                 pullRequest.mergedAt = moment().subtract(indexC, "h").toDate();
             }
-
-            await connection.manager.save(pullRequest)
+            pullRequests.push(pullRequest)
 
             //create issues
             let issue = new Issue();
@@ -104,8 +114,11 @@ createConnection().then(async connection => {
                 issue.mergedAt = moment().subtract(indexC, "h").toDate();
             }
 
-            await connection.manager.save(issue)
+            issues.push(issue)
         }
+        
+        await connection.manager.insert(PullRequest, pullRequests)
+        await connection.manager.insert(Issue, issues)
 
         //create security issues
         let securityIssue = new SecurityIssue();
@@ -117,8 +130,9 @@ createConnection().then(async connection => {
         securityIssue.moreInfo = `https://nodesecurity.io/advisories/${securityIssue.id}`;
         securityIssue.patchedIn = _.sample([null, '> 4.3.0 < 5.0.0 YY >= 5.0.3'])
         securityIssue.createdAt = moment(securityIssue.createdAt).subtract(indexC, 'm').toDate();
+        securityIssues.push(securityIssue)
 
-        await connection.manager.save(securityIssue);
+        await connection.manager.insert(SecurityIssue, securityIssues);
 
         // // load score:
         // const loadedScoreCount = await connection
