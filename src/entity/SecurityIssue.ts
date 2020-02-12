@@ -4,11 +4,11 @@ import { Component } from "./Component";
 @Entity({ name: "securityIssues" })
 export class SecurityIssue {
 
-  @PrimaryGeneratedColumn()
-  uuid: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
-  id: number;
+  externalId: number;
 
   @Column()
   impact: Impact;
@@ -25,8 +25,8 @@ export class SecurityIssue {
   @Column({nullable: true})
   patchedIn: string;
 
-  @ManyToOne(type => Component, component => component.id)
-  component: string;
+  @ManyToOne(type => Component, component => component.securityIssues, { nullable: false})
+  component: Component;
 
   /**
      * DB insert time.

@@ -4,13 +4,13 @@ import { Component } from "./Component";
 @Entity({ name: "scores" })
 export class Score {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column({ nullable: false })
   recordedAt: Date;
 
-  @ManyToOne(type => Component, component => component.score, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(type => Component, component => component.scores, { nullable: false, onDelete: 'CASCADE' })
   component: Component;
 
   @Column({ nullable: false })

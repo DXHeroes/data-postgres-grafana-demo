@@ -3,11 +3,11 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 @Entity({ name: "users" })
 export class User {
 
-    @PrimaryGeneratedColumn()
-    uuid: number;
+    @PrimaryGeneratedColumn("uuid")
+    id: string;
 
     @Column()
-    id: string;
+    externalId: number;
 
     @Column()
     login: string;

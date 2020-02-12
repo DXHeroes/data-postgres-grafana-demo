@@ -2,19 +2,19 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, Up
 import { User } from "./User";
 import { Component } from "./Component";
 
-@Entity({ name: "codeCoverage" })
+@Entity({ name: "codeCoverages" })
 export class CodeCoverage {
 
-  @PrimaryGeneratedColumn()
-  uuid: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
-  id: number;
+  externalId: number;
 
   @Column({ nullable: false })
   recordedAt: Date;
 
-  @ManyToOne(type => Component, component => component.score, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(type => Component, component => component.codeCoverages, { nullable: false, onDelete: 'CASCADE' })
   component: Component;
 
   @Column({ nullable: false, type: "decimal" })

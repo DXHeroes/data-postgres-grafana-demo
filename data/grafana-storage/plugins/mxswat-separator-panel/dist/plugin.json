@@ -1,0 +1,26 @@
+{
+  "type": "panel",
+  "name": "Separator",
+  "id": "mxswat-separator-panel",
+  "info": {
+    "description": "A simple separator panel",
+    "author": {
+      "name": "Massimo \"Mx\" Cacciapaglia",
+      "url": "http://mxportfolio.it"
+    },
+    "logos": {
+      "small": "img/icon.png",
+      "large": "img/icon.png"
+    },
+    "keywords": [
+      "separator",
+      "panel"
+    ],
+    "version": "1.0.0",
+    "updated": "2018-12-19"
+  },
+  "dependencies": {
+    "grafanaVersion": "3.x.x",
+    "plugins": []
+  }
+}

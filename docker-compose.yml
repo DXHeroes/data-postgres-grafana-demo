@@ -16,7 +16,7 @@ services:
     container_name: grafana
     environment:
       GF_USERS_DEFAULT_THEME: light
-      GF_INSTALL_PLUGINS: grafana-piechart-panel
+      GF_INSTALL_PLUGINS: grafana-piechart-panel, digiapulssi-breadcrumb-panel, mxswat-separator-panel
     ports:
       - "3000:3000"
     user: "0"

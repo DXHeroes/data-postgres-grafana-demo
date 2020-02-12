@@ -6,16 +6,16 @@
   "author": "Prokop Simek <prokop@dxheroes.io>",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^13.1.7",
+    "@types/node": "^13.7.1",
     "ts-node": "8.6.2",
-    "typescript": "3.7.4"
+    "typescript": "3.7.5"
   },
   "dependencies": {
     "@types/faker": "^4.1.9",
     "faker": "^4.1.0",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
-    "pg": "^7.17.1",
+    "pg": "^7.18.1",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.22"
   },

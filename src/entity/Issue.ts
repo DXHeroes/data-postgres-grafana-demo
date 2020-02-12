@@ -5,17 +5,17 @@ import { Component } from "./Component";
 @Entity({ name: "issues" })
 export class Issue {
 
-  @PrimaryGeneratedColumn()
-  uuid: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
-  id: number;
+  externalId: number;
 
-  @ManyToOne(type => User, user => user.uuid)
+  @ManyToOne(type => User, user => user.id)
   user: User;
 
-  @ManyToOne(type => Component, component => component.id)
-  component: string;
+  @ManyToOne(type => Component, component => component.issues, { nullable: false})
+  component: Component;
 
   @Column()
   path: string;

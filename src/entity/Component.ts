@@ -8,16 +8,13 @@ import { CodeCoverage } from "./CodeCoverage";
 @Entity({ name: "components" })
 export class Component {
 
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
-  // @Column()
-  // id: string;
-
-  @Column()
+  @Column({ unique: true })
   name: string;
 
-  @Column()
+  @Column({ unique: true })
   path: string;
 
   @Column({ nullable: true})
@@ -27,19 +24,19 @@ export class Component {
   platform: Platform;
 
   @OneToMany(type => Score, score => score.component, { cascade: true, onDelete: 'CASCADE' })
-  score: Score[];
+  scores: Score[];
 
-  @OneToMany(type => CodeCoverage, codeCoverage => codeCoverage.component, { cascade: true, onDelete: 'CASCADE' })
-  codeCoverage: CodeCoverage[];
+  @OneToMany(type => CodeCoverage, codeCoverage => codeCoverage.id, { cascade: true, onDelete: 'CASCADE' })
+  codeCoverages: CodeCoverage[];
 
-  @OneToMany(type => PullRequest, pullRequest => pullRequest.uuid)
-  pullRequest: PullRequest[];
+  @OneToMany(type => PullRequest, pullRequest => pullRequest.id, { cascade: true, onDelete: 'CASCADE' })
+  pullRequests: PullRequest[];
 
-  @OneToMany(type => Issue, issue => issue.uuid)
-  issue: Issue[];
+  @OneToMany(type => Issue, issue => issue.id, { cascade: true, onDelete: 'CASCADE' })
+  issues: Issue[];
   
-  @OneToMany(type => SecurityIssue, securityIssue => securityIssue.uuid)
-  securityIssue: SecurityIssue[];
+  @OneToMany(type => SecurityIssue, securityIssue => securityIssue.id, { cascade: true, onDelete: 'CASCADE' })
+  securityIssues: SecurityIssue[];
 
   /**
      * DB insert time.
