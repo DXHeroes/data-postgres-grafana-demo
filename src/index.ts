@@ -23,7 +23,7 @@ createConnection().then(async connection => {
     const totalPracticesCount = 50;
 
     // create 100 components
-    for (let indexC = 0; indexC < 100; indexC++) {
+    for (let indexC = 0; indexC < 10; indexC++) {
         const users: User[] = [];
         const scores: Score[] = []
         const codeCoverages: CodeCoverage[] = []
