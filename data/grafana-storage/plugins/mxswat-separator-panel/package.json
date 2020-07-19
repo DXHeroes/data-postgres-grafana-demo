@@ -13,7 +13,7 @@
   "author": "Bax",
   "license": "TBD",
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.19",
     "moment": "^2.18.1",
     "q": "^1.5.0",
     "systemjs": "^0.19.47"
